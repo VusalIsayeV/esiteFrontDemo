@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        input.form-control {
+            border-radius: 5px;
+            box-shadow: none;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary,
+        .btn-danger {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-size: 18px;
+        }
+
+        td {
+            font-size: 16px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        #orderTable,
+        #orderItemTable {
+            display: none;
+        }
+
+        #auth-section {
+            display: block;
+            text-align: center;
+        }
+
+        /* Form elementləri */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        /* Fayl yükləmə sahəsi */
+        input[type="file"] {
+            padding: 5px;
+        }
+
+        /* Göndərmə düyməsi */
+        .button1 {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button2 {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #ff0000;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button1:hover {
+            background-color: #0056b3;
+        }
+        .button2:hover {
+            background-color: #b30000;
+        }
+        img{
+            width: 315px;
+            height: 300px;
+        }
+        .list-group-item{
+            display: flex;
+            justify-content: space-around;
+        }
+        .list-group-item button{
+            width: 100% !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <div id="auth-section">
+            <h3>Giriş</h3>
+            <input type="text" id="email" placeholder="E-mail" class="form-control mb-2">
+            <input type="password" id="password" placeholder="Şifrə" class="form-control mb-2">
+            <button id="login-btn" class="btn btn-primary">Giriş</button>
+            <button id="logout-btn" class="btn btn-danger" style="display:none;">Çıxış</button>
+        </div>
+        <h2 class="addproductde1" style="display:none;">Sifarişlər</h2>
+
+        <!-- Order Table -->
+        <table id="orderTable" style="display:none;" border="2">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ad</th>
+                    <th>Soyad</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                    <th>Ümumi Məbləğ</th>
+                    <th>Sifariş Tarixi</th>
+                    <th>Status</th>
+                    <th>Əməliyyat</th>
+                </tr>
+            </thead>
+            <tbody id="orderTableBody" style="display:none;">
+                <!-- Order data will be inserted here -->
+            </tbody>
+        </table>
+
+        <h2 class="addproductde2" style="display:none;">Sifariş Məhsulları</h2>
+
+        <!-- Order Item Table -->
+        <table id="orderItemTable" style="display:none;" border="2">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Product ID</th>
+                    <th>Product Count</th>
+                </tr>
+            </thead>
+            <tbody id="orderItemTableBody">
+                <!-- Order item data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <div class="container addproductde" style="display:none;">
+        <h1>Məhsul Əlavə Et</h1>
+        <form id="addProductForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="product_name">Məhsul Adı:</label>
+                <input type="text" id="product_name" name="product_name" placeholder="Məhsul adını daxil edin" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_price">Qiymət:</label>
+                <input type="number" id="product_price" name="product_price" placeholder="Məhsulun qiymətini daxil edin"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="product_category">Kateqoriya:</label>
+                <select id="product_category" name="product_category" required>
+                    <option value="">Seçin</option>
+                    <option value="1">Smartfonlar</option>
+                    <option value="2">Kompüterlər</option>
+                    <option value="3">Televizorlar</option>
+                    <!-- Digər kateqoriyaları əlavə edə bilərsiniz -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="product_about">Haqqında:</label>
+                <textarea id="product_about" name="product_about" placeholder="Məhsul haqqında məlumat verin"
+                    required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="product_image">Şəkil Yükləyin:</label>
+                <input type="file" id="product_image" name="product_image">
+            </div>
+
+            <button type="submit" class="btn">Məhsulu Əlavə Et</button>
+        </form>
+    </div>
+    <div id="products-section" style="display:none;">
+        <h3>Məhsullar</h3>
+        <ul id="products-list" class="list-group"></ul>
+    </div>
+    <script src="admin.js"></script>
+</body>
+
+</html>

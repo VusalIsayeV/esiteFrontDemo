@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API ilə İnteqrasiya</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        /* Genel gövde stilleri */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+            text-align: center;
+        }
+
+        h3 {
+            color: #495057;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        /* Input stilleri */
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        /* Buton stilleri */
+        .btn {
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        /* Liste stilleri */
+        .list-group-item {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+
+        /* Səbət bölümü */
+        #basket-section {
+            margin-top: 30px;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Müşteri bilgi alanı */
+        #customer-info {
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        #customer-info input {
+            margin-bottom: 10px;
+        }
+
+        /* Giriş butonu altındaki metin */
+        .mb-4 {
+            margin-bottom: 2rem !important;
+        }
+
+        /* Səhifə başlığı */
+        #auth-section {
+            text-align: center;
+        }
+        img{
+            width: 315px;
+            height: 300px;
+        }
+        .list-group-item{
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">API</h1>
+        <div id="auth-section">
+            <h3>Giriş</h3>
+            <input type="text" id="email" placeholder="E-mail" class="form-control mb-2">
+            <input type="password" id="password" placeholder="Şifrə" class="form-control mb-2">
+            <button id="login-btn" class="btn btn-primary">Giriş</button>
+            <button id="logout-btn" class="btn btn-danger" style="display:none;">Çıxış</button>
+        </div>
+
+        <div id="products-section" style="display:none;">
+            <h3>Məhsullar</h3>
+            <ul id="products-list" class="list-group"></ul>
+        </div>
+
+        <div id="categories-section" style="display:none;">
+            <h3>Kateqoriyalar</h3>
+            <ul id="categories-list" class="list-group"></ul>
+        </div>
+
+        <div id="basket-section" style="display:none;">
+            <h3>Səbət</h3>
+            <ul id="basket-list" class="list-group"></ul>
+            <button id="clear-basket-btn" class="btn btn-warning mt-3">Səbəti Təmizlə</button>
+            <button id="complete-order-btn" class="btn btn-success mt-3">Sifarişi Tamamla</button>
+
+            <div id="customer-info" class="mt-4">
+                <h5>Müştəri Məlumatları</h5>
+                <input type="text" id="customer-name" placeholder="Ad" class="form-control mb-2">
+                <input type="text" id="customer-surname" placeholder="Soyad" class="form-control mb-2">
+                <input type="text" id="customer-phone" placeholder="Telefon" class="form-control mb-2">
+                <input type="email" id="customer-email" placeholder="E-mail" class="form-control mb-2">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
